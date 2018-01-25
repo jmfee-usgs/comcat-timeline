@@ -3,6 +3,9 @@ earthquake-timeline-js
 
 Prototype timeline for earthquake events.
 
+https://jmfee-usgs.github.io/comcat-timeline/timeline.html
+
+
 ## Getting Started
 
 - Download or clone this project
