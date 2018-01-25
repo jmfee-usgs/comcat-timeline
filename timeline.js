@@ -52,7 +52,10 @@ function onHashChange () {
 
   eventid = window.location.hash.replace('#', '')
   if (!eventid) {
-    timeline.model.set({'event': null});
+    timeline.model.set({
+      'event': null,
+      'loading': false
+    });
   } else {
     loadTimeline(eventid);
   }
@@ -88,7 +91,10 @@ function loadTimeline (eventid) {
   var url,
       xhr;
 
-  timeline.model.set({'event': null});
+  timeline.model.set({
+    'event': null,
+    'loading': true
+  });
 
   url = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&includesuperseded=true&eventid=' +
       eventid;
@@ -117,7 +123,8 @@ function onLoad () {
   // parse response (this is the xhr)
   eq = CatalogEvent(JSON.parse(this.responseText));
   timeline.model.set({
-    'event': eq
+    'event': eq,
+    'loading': false
   });
 }
 
@@ -212,14 +219,16 @@ function Timeline (options) {
 
   _this.render = function () {
     var eq,
+        loading,
         products,
         summary;
 
     eq = _this.model.get('event');
     if (!eq) {
+      loading = _this.model.get('loading');
       _this.summary.innerHTML = '';
       _this.timeline.innerHTML = '<div class="alert info">' +
-          'Select an event' +
+          (loading ? 'Loading event data&hellip;' : 'Select an event') +
           '</div>';
       return;
     }
