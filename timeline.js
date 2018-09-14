@@ -126,7 +126,22 @@ function Timeline(options) {
       host = "https://" + host;
     }
 
-    products.forEach(function(p) {
+    // figure out first and last version of each product
+    var firstLastIndex = {};
+    products.forEach(function(p, i) {
+      p = p.get();
+      var key = `${p.source}_${p.type}_${p.code}`;
+      if (!(key in firstLastIndex)) {
+        firstLastIndex[key] = {
+          first: i,
+          last: i
+        };
+      } else {
+        firstLastIndex[key].last = i;
+      }
+    });
+
+    products.forEach(function(p, i) {
       p = p.get();
       var props = p.properties;
 
@@ -145,6 +160,13 @@ function Timeline(options) {
       classes.push("preferred-" + !!p.preferred);
       classes.push("type-" + p.type);
       classes.push("status-" + p.status);
+      var key = `${p.source}_${p.type}_${p.code}`;
+      if (i === firstLastIndex[key].first) {
+        classes.push("version-first");
+      }
+      if (i === firstLastIndex[key].last) {
+        classes.push("version-last");
+      }
 
       html += `
           <tr class="${classes.join(" ")}">
@@ -167,23 +189,27 @@ function Timeline(options) {
       // controls
       '<input type="checkbox" id="only-show-diffs" checked/>' +
       '<label for="only-show-diffs">' +
-      "Only show differences" +
+      "Hide values" +
+      "</label>" +
+      '<input type="checkbox" id="only-show-first-last"/>' +
+      '<label for="only-show-first-last">' +
+      "Only show first and last versions" +
       "</label>" +
       '<input type="checkbox" id="only-show-preferred"/>' +
       '<label for="only-show-preferred">' +
       "Only show preferred" +
-      "</label>" +
-      '<input type="checkbox" id="only-show-first-last-dyfi" checked/>' +
-      '<label for="only-show-first-last-dyfi">' +
-      "Hide most DYFI products" +
       "</label>" +
       // table
       '<div class="horizontal-scrolling">' +
       "<table>" +
       "<thead>" +
       "<tr>" +
-      "<th>Sent</th>" +
-      "<th>Indexed</th>" +
+      "<th>" +
+      '<abbr title="Time reported by contributor">Sent</abbr>*' +
+      "</th>" +
+      "<th>" +
+      '<abbr title="Time (this server) processed product, relative to Sent">Indexed</abbr>' +
+      "</th>" +
       "<th>Product</th>" +
       "<th>Event ID</th>" +
       "<th>Latitude</th>" +
@@ -197,7 +223,12 @@ function Timeline(options) {
       "<tbody>" +
       html +
       "</tbody>" +
-      "</tabl></div>";
+      "</table></div>" +
+      // disclaimer about sent
+      '<p class="alert info"><small>' +
+      "* Sent is assigned by contributors, and does not necessarily " +
+      "reflect when a product was actually sent via PDL. " +
+      "</small></p>";
     return html;
   };
 

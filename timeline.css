@@ -1,7 +1,22 @@
+/* row background colors */
 .preferred-false > td {
   background-color: #eee;
 }
+.status-DELETE > td {
+  background-color: #fee;
+}
 
+/* control checkbox layout */
+input[type="checkbox"],
+input[type="checkbox"] + label {
+  display: inline-block;
+}
+
+label + input[type="checkbox"] {
+  margin-left: 2em;
+}
+
+/* show values in addition to diffs */
 .value {
   display: block;
 }
@@ -10,24 +25,17 @@
   display: none;
 }
 
-#only-show-preferred:checked ~ * .preferred-false {
+/* hide products */
+#only-show-first-last:checked ~ * tbody > tr {
   display: none;
 }
-
-/* hide dyfi products that aren't first */
-#only-show-first-last-dyfi:checked ~ * .type-dyfi ~ .type-dyfi {
-  display: none;
-}
-/* except, show the last one */
-#only-show-first-last-dyfi:checked ~ * .type-dyfi:last-of-type {
+/* except first and last version */
+#only-show-first-last:checked ~ * tr.version-first,
+#only-show-first-last:checked ~ * tr.version-last {
   display: table-row;
 }
 
-input[type="checkbox"],
-input[type="checkbox"] + label {
-  display: inline-block;
-}
-
-label + input[type="checkbox"] {
-  margin-left: 2em;
+/* hide non-preferred products */
+#only-show-preferred:checked ~ * .preferred-false {
+  display: none !important;
 }
