@@ -1,3 +1,11 @@
 .preferred-false > td {
   background-color: #eee;
 }
+
+.value {
+  display: block;
+}
+
+#only-show-diffs:checked+label+.timeline .value {
+  display: none;
+}

@@ -17,6 +17,83 @@ timeline = Timeline({
   nav: nav
 });
 
+function formatNumberDiff(n, reference) {
+  if (!n) {
+    return "&ndash;";
+  }
+
+  var diff = n - reference;
+
+  return (
+    (diff >= 0 ? "+" : "") +
+    diff.toFixed(2) +
+    "<br/>" +
+    '<small class="value">' +
+    n +
+    "</small>"
+  );
+}
+
+function formatTimeDiff(t, reference) {
+  if (!t) {
+    return "&ndash;";
+  }
+
+  t = new Date(t);
+  reference = new Date(reference);
+
+  var diff,
+    seconds = 0,
+    minutes = 0,
+    hours = 0,
+    days = 0,
+    years = 0;
+
+  diff = (t.getTime() - reference.getTime()) / 1000;
+  seconds = Math.abs(diff);
+  if (seconds > 60) {
+    minutes = Math.round(seconds / 60);
+    seconds = seconds % 60;
+    if (minutes > 60) {
+      hours = Math.round(minutes / 60);
+      minutes = minutes % 60;
+      if (hours > 24) {
+        days = Math.round(hours / 24);
+        hours = hours % 24;
+        if (days > 365) {
+          years = Math.round(days / 365);
+          days = days % 365;
+        }
+      }
+    }
+  }
+
+  var f = "";
+  if (years != 0) {
+    f += years + "y";
+  }
+  if (days != 0) {
+    f += days + "d";
+  }
+  if (hours != 0 && years === 0) {
+    f += hours + "h";
+  }
+  if (minutes != 0 && years === 0 && days === 0) {
+    f += minutes + "m";
+  }
+  if (years === 0 && days === 0 && hours === 0) {
+    f += seconds.toFixed(1) + "s";
+  }
+  return (
+    (diff > 0 ? "+" : "") +
+    f +
+    "<br/>" +
+    '<small class="value">' +
+    t.toISOString() +
+    "</small>"
+  );
+}
+
 function Timeline(options) {
   var _this, _initialize;
 
@@ -29,7 +106,12 @@ function Timeline(options) {
 
     el = _this.el;
     el.innerHTML =
-      '<div class="summary"></div>' + '<div class="timeline"></div>';
+      '<div class="summary"></div>' +
+      '<input type="checkbox" id="only-show-diffs" checked/>' +
+      '<label for="only-show-diffs">' +
+        "Only show differences" +
+      "</label>" +
+      '<div class="timeline"></div>';
 
     _this.formatter = options.formatter || Formatter();
     _this.summary = el.querySelector(".summary");
@@ -40,70 +122,73 @@ function Timeline(options) {
     _this.loadTimeline();
   };
 
-  _this.formatProduct = function(html, p) {
-    var host, props;
+  _this.formatProducts = function(products, summary) {
+    var html = "";
 
-    p = p.get();
-
-    host = _this.nav.model.get("hostname");
+    var eq = _this.model.get("event");
+    var host = _this.nav.model.get("hostname");
     if (host) {
       host = "https://" + host;
     }
 
-    props = p.properties;
-    html +=
-      '<tr class="' +
-      "type-" +
-      p.type +
-      " preferred-" +
-      !!p.preferred +
-      '">' +
-      "<td><time>" +
-      new Date(p.updateTime).toISOString() +
-      "</time></td>" +
-      "<td>" +
-      '<a href="' +
-      host +
-      "/archive/product/" +
-      p.type +
-      "/" +
-      p.code +
-      "/" +
-      p.source +
-      "/" +
-      p.updateTime +
-      '/product.xml">' +
-      p.id.replace("urn:usgs-product:", "").replace(/\:[\d]+$/, "") +
-      "</a>" +
-      "</td>" +
-      "<td>" +
-      (props.eventsource && props.eventsourcecode
-        ? props.eventsource + props.eventsourcecode
-        : "&ndash;") +
-      "</td>" +
-      "<td>" +
-      (props.latitude || "&ndash;") +
-      "</td>" +
-      "<td>" +
-      (props.longitude || "&ndash;") +
-      "</td>" +
-      "<td>" +
-      (props.eventtime || "&ndash;") +
-      "</td>" +
-      "<td>" +
-      (props.magnitude || "&ndash;") +
-      "</td>" +
-      "<td>" +
-      (props.depth || "&ndash;") +
-      "</td>" +
-      "<td>" +
-      (props.version || "&ndash;") +
-      "</td>" +
-      "<td>" +
-      p.status +
-      "</td>" +
-      "</tr>";
+    products.forEach(function(p) {
+      p = p.get();
+      var props = p.properties;
 
+      var classes = [];
+      var eventid =
+        props.eventsource && props.eventsourcecode
+          ? props.eventsource + props.eventsourcecode
+          : "&ndash;";
+      var xmlLink = `${host}/archive/product/${p.type}/${p.code}/${p.source}/${
+        p.updateTime
+      }/product.xml`;
+      var xmlLinkText = p.id
+        .replace("urn:usgs-product:", "")
+        .replace(/\:[\d]+$/, "");
+
+      classes.push("preferred-" + !!p.preferred);
+      classes.push("type-" + p.type);
+      classes.push("status-" + p.status);
+
+      html += `
+          <tr class="${classes.join(" ")}">
+            <td>${formatTimeDiff(p.updateTime, summary.time)}</td>
+            <td>${formatTimeDiff(p.indexTime, p.updateTime)}</td>
+            <td><a href="${xmlLink}">${xmlLinkText}</a></td>
+            <td>${eventid}</td>
+            <td>${formatNumberDiff(props.latitude, summary.latitude)}</td>
+            <td>${formatNumberDiff(props.longitude, summary.longitude)}</td>
+            <td>${formatTimeDiff(props.eventtime, summary.time)}</td>
+            <td>${formatNumberDiff(props.magnitude, summary.magnitude)}</td>
+            <td>${formatNumberDiff(props.depth, summary.depth)}</td>
+            <td>${props.version || "&ndash;"}</td>
+            <td>${p.status}</td>
+          </tr>
+      `;
+    });
+
+    html =
+      '<div class="horizontal-scrolling">' +
+      "<table>" +
+      "<thead>" +
+      "<tr>" +
+      "<th>Sent</th>" +
+      "<th>Indexed</th>" +
+      "<th>Product</th>" +
+      "<th>Event ID</th>" +
+      "<th>Latitude</th>" +
+      "<th>Longitude</th>" +
+      "<th>Event Time</th>" +
+      "<th>Magnitude</th>" +
+      "<th>Depth</th>" +
+      "<th>Version</th>" +
+      "<th>Status</th>" +
+      "</thead>" +
+      "<tbody>" +
+      html +
+      "</tbody>" +
+      "</tabl></div>";
     return html;
   };
 
@@ -235,30 +320,9 @@ function Timeline(options) {
       "</dl>";
 
     products = _this.getProducts(eq);
-
     // make table
     _this.timeline.innerHTML =
-      "<h3>Products</h3>" +
-      '<div class="horizontal-scrolling">' +
-      "<table>" +
-      "<thead>" +
-      "<tr>" +
-      "<th>Sent</th>" +
-      "<th>Product</th>" +
-      "<th>Event ID</th>" +
-      "<th>Latitude</th>" +
-      "<th>Longitude</th>" +
-      "<th>Event Time</th>" +
-      "<th>Magnitude</th>" +
-      "<th>Depth</th>" +
-      "<th>Version</th>" +
-      "<th>Status</th>" +
-      "</thead>" +
-      "<tbody>" +
-      products.reduce(_this.formatProduct, "") +
-      "</tbody>" +
-      "</table>" +
-      "</div>";
+      "<h3>Products</h3>" + _this.formatProducts(products, summary);
   };
 
   _initialize(options);
