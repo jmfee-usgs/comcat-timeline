@@ -6,6 +6,28 @@
   display: block;
 }
 
-#only-show-diffs:checked+label+.timeline .value {
+#only-show-diffs:checked ~ * .value {
   display: none;
+}
+
+#only-show-preferred:checked ~ * .preferred-false {
+  display: none;
+}
+
+/* hide dyfi products that aren't first */
+#only-show-first-last-dyfi:checked ~ * .type-dyfi ~ .type-dyfi {
+  display: none;
+}
+/* except, show the last one */
+#only-show-first-last-dyfi:checked ~ * .type-dyfi:last-of-type {
+  display: table-row;
+}
+
+input[type="checkbox"],
+input[type="checkbox"] + label {
+  display: inline-block;
+}
+
+label + input[type="checkbox"] {
+  margin-left: 2em;
 }

@@ -106,12 +106,7 @@ function Timeline(options) {
 
     el = _this.el;
     el.innerHTML =
-      '<div class="summary"></div>' +
-      '<input type="checkbox" id="only-show-diffs" checked/>' +
-      '<label for="only-show-diffs">' +
-        "Only show differences" +
-      "</label>" +
-      '<div class="timeline"></div>';
+      '<div class="summary"></div>' + '<div class="timeline"></div>';
 
     _this.formatter = options.formatter || Formatter();
     _this.summary = el.querySelector(".summary");
@@ -169,6 +164,20 @@ function Timeline(options) {
     });
 
     html =
+      // controls
+      '<input type="checkbox" id="only-show-diffs" checked/>' +
+      '<label for="only-show-diffs">' +
+      "Only show differences" +
+      "</label>" +
+      '<input type="checkbox" id="only-show-preferred"/>' +
+      '<label for="only-show-preferred">' +
+      "Only show preferred" +
+      "</label>" +
+      '<input type="checkbox" id="only-show-first-last-dyfi" checked/>' +
+      '<label for="only-show-first-last-dyfi">' +
+      "Hide most DYFI products" +
+      "</label>" +
+      // table
       '<div class="horizontal-scrolling">' +
       "<table>" +
       "<thead>" +
