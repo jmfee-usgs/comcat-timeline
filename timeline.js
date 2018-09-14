@@ -85,7 +85,7 @@ function formatTimeDiff(t, reference) {
     f += seconds.toFixed(1) + "s";
   }
   return (
-    (diff > 0 ? "+" : "") +
+    (diff > 0 ? "+" : "-") +
     f +
     "<br/>" +
     '<small class="value">' +
