@@ -8,11 +8,14 @@
 
 /* control checkbox layout */
 input[type="checkbox"],
-input[type="checkbox"] + label {
+input[type="checkbox"] + label,
+input[type="radio"],
+input[type="radio"] + label {
   display: inline-block;
 }
 
-label + input[type="checkbox"] {
+label + input[type="checkbox"],
+label + input[type="radio"] {
   margin-left: 2em;
 }
 
@@ -38,4 +41,14 @@ label + input[type="checkbox"] {
 /* hide non-preferred products */
 #only-show-preferred:checked ~ * .preferred-false {
   display: none !important;
+}
+
+
+/* unless showing origins */
+#only-show-origins:checked ~ * tbody > tr {
+  display: none;
+}
+
+#only-show-origins:checked ~ * tbody > tr.type-origin {
+  display: table-row;
 }

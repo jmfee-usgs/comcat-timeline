@@ -187,17 +187,26 @@ function Timeline(options) {
 
     html =
       // controls
-      '<input type="checkbox" id="only-show-diffs" checked/>' +
-      '<label for="only-show-diffs">' +
-      "Hide values" +
-      "</label>" +
-      '<input type="checkbox" id="only-show-first-last"/>' +
+      '<input type="radio" name="products" id="all-products" checked/>' +
+      '<label for="all-products">' +
+      "All products" +
+      '</label>' +
+      '<input type="radio" name="products" id="only-show-first-last"/>' +
       '<label for="only-show-first-last">' +
       "Only show first and last versions" +
       "</label>" +
-      '<input type="checkbox" id="only-show-preferred"/>' +
+      '<input type="radio" name="products" id="only-show-preferred"/>' +
       '<label for="only-show-preferred">' +
       "Only show preferred" +
+      "</label>" +
+      '<input type="radio" name="products" id="only-show-origins"/>' +
+      '<label for="only-show-origins">' +
+      "Only show origins" +
+      "</label>" +
+      '<br/>' +
+      '<input type="checkbox" id="only-show-diffs" checked/>' +
+      '<label for="only-show-diffs">' +
+      "Hide values" +
       "</label>" +
       // table
       '<div class="horizontal-scrolling">' +
