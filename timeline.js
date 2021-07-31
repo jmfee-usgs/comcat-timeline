@@ -52,16 +52,16 @@ function formatTimeDiff(t, reference) {
   diff = (t.getTime() - reference.getTime()) / 1000;
   seconds = Math.abs(diff);
   if (seconds > 60) {
-    minutes = Math.round(seconds / 60);
+    minutes = Math.floor(seconds / 60);
     seconds = seconds % 60;
     if (minutes > 60) {
-      hours = Math.round(minutes / 60);
+      hours = Math.floor(minutes / 60);
       minutes = minutes % 60;
       if (hours > 24) {
-        days = Math.round(hours / 24);
+        days = Math.floor(hours / 24);
         hours = hours % 24;
         if (days > 365) {
-          years = Math.round(days / 365);
+          years = Math.floor(days / 365);
           days = days % 365;
         }
       }
