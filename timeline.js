@@ -150,9 +150,12 @@ function Timeline(options) {
         props.eventsource && props.eventsourcecode
           ? props.eventsource + props.eventsourcecode
           : "&ndash;";
-      var xmlLink = `${host}/archive/product/${p.type}/${p.code}/${p.source}/${
-        p.updateTime
-      }/product.xml`;
+      var xmlLink = `${host}/pdl/west/get_product?` + [
+        `type=${p.type}`,
+        `code=${p.code}`,
+        `source=${p.source}`,
+        `updateTime=${p.updateTime}`
+      ].join('&');
       var xmlLinkText = p.id
         .replace("urn:usgs-product:", "")
         .replace(/\:[\d]+$/, "");
@@ -465,6 +468,7 @@ function TimelineNav(options) {
       return;
     }
 
+    hash = decodeURI(hash);
     hash = hash.split("|");
     eventid = hash[0];
     hostname = hash.length > 1 ? hash[1] : _this.model.get("hostname");
