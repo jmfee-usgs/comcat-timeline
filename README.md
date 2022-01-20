@@ -26,9 +26,9 @@ Prototype timeline for earthquake events.
   http://localhost:3000/
   ```
 
-## Publish updates to gh-pages
+## Deploy updates to gh-pages
 
 ```bash
 npm run build
-npm run publish
+npm run deploy
 ```
