@@ -25,10 +25,10 @@ export function Timeline({
     return (
       `${host}/pdl/west/get_product?` +
       [
-        `type={p.type}`,
-        `source={p.source}`,
-        `code={p.code}`,
-        `updateTime={p.updateTime}`,
+        `type=${p.type}`,
+        `source=${p.source}`,
+        `code=${p.code}`,
+        `updateTime=${p.updateTime}`,
       ].join("&")
     );
   }
