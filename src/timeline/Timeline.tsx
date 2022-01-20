@@ -22,15 +22,7 @@ export function Timeline({
   const catalog = useFetch<CatalogEvent>({ url });
 
   function getProductLink(p: ProductSummary) {
-    return (
-      `${host}/pdl/west/get_product?` +
-      [
-        `type=${p.type}`,
-        `source=${p.source}`,
-        `code=${p.code}`,
-        `updateTime=${p.updateTime}`,
-      ].join("&")
-    );
+    return `${host}/product/${p.type}/${p.code}/${p.source}/${p.updateTime}/pdl_product.json`;
   }
 
   if (catalog.loading) {
