@@ -1,16 +1,27 @@
-earthquake-timeline-js
-======================
+# comcat-timeline
 
 Prototype timeline for earthquake events.
 
-https://jmfee-usgs.github.io/comcat-timeline/timeline.html
-
+[https://jmfee-usgs.github.io/comcat-timeline/](https://jmfee-usgs.github.io/comcat-timeline/)
 
 ## Getting Started
 
 - Download or clone this project
-- Open timeline.html in a web browser
-- In the left column (or behind the menu on small screens) enter an Event ID and click Search, or select a recent significant event
-- Wait for event to load
+- Install dependencies
 
+  ```bash
+  cd comcat-timeline
+  npm install
+  ```
 
+- Start a development server
+
+  ```bash
+  npm run dev
+  ```
+
+- Open application in browser
+
+  ```bash
+  http://localhost:3000/
+  ```

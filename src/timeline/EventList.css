@@ -1,0 +1,4 @@
+.EventList > li > a {
+  cursor: pointer;
+  display: block;
+}

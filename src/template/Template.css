@@ -1,0 +1,82 @@
+/* hide mobilenav elements by default */
+@media screen and (min-width: 768px) {
+  .mobilenav {
+    padding: 0 1em;
+  }
+
+  .mobilenav-mask,
+  .mobilenav-toggle {
+    display: none;
+  }
+}
+
+/* only applies when on a small screen */
+@media screen and (max-width: 767px) {
+  /** Styles when screen is "mobile" */
+
+  .mobilenav-toggle {
+    box-shadow: none;
+    display: block;
+    font-size: 0.88em;
+    height: 2em;
+    line-height: 2em;
+    margin: 0;
+    padding: 0 0.75em;
+    position: absolute;
+    right: 1em;
+    top: 12px;
+    user-select: none;
+    z-index: 1000;
+  }
+
+  .mobilenav {
+    background-color: #fff;
+    bottom: 0;
+    box-shadow: 1px 0 4px 0 black;
+    left: -228px;
+    overflow-y: auto;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    width: 228px;
+    -webkit-overflow-scrolling: touch;
+    z-index: 1002;
+  }
+
+  .mobilenav-mask {
+    background-color: rgba(0, 0, 0, 0);
+    bottom: 0;
+    display: block;
+    left: 0;
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1001;
+  }
+
+  /** Styles when mobile nav is visible */
+  .mobilenav-active {
+    position: relative;
+    overflow: hidden;
+  }
+  .mobilenav-active .mobilenav-mask {
+    background-color: rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+    display: block;
+    pointer-events: all;
+  }
+  .mobilenav-active .mobilenav {
+    left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mobilenav,
+  .mobilenav-enabled,
+  .mobilenav-mask {
+    transition-property: background-color, left;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+  }
+}

@@ -43,7 +43,6 @@ label + input[type="radio"] {
   display: none !important;
 }
 
-
 /* unless showing origins */
 #only-show-origins:checked ~ * tbody > tr {
   display: none;
